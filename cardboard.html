@@ -105,7 +105,7 @@
         lightScene.position.set(0, 5, 0);
         scene.add(lightScene);
 
-        var floorTexture = THREE.ImageUtils.loadTexture('img/index/NZ_Mountain_Quote.jpg');
+        var floorTexture = THREE.ImageUtils.loadTexture('textures/wood.jpg');
         floorTexture.wrapS = THREE.RepeatWrapping;
         floorTexture.wrapT = THREE.RepeatWrapping;
         floorTexture.repeat = new THREE.Vector2(50, 50);
@@ -119,11 +119,11 @@
           map: floorTexture
         });
 
-        var geometry = new THREE.PlaneBufferGeometry(1000, 1000);
+        var geometry = new THREE.PlaneBufferGeometry(50, 50);
 
         var floor = new THREE.Mesh(geometry, floorMaterial);
         //floor.rotation.x = -Math.PI / 2;
-        floor.position = new THREE.Vector3(10,10,10)
+        floor.position.set(30, 30, 30)
         scene.add(floor);
         
 
@@ -154,109 +154,109 @@
         animate();
       }
 
-      function adjustToWeatherConditions() {
-        var cityIDs = '';
-        for (var i = 0; i < cities.length; i++) {
-          cityIDs += cities[i][1];
-          if (i != cities.length - 1) cityIDs += ',';
-        }
-        getURL('http://api.openweathermap.org/data/2.5/group?id=' + cityIDs + '&APPID=b5c0b505a8746a1b2cc6b17cdab34535', function(info) {
-          cityWeather = info.list;
-          
-          lookupTimezones(0, cityWeather.length);
-        });
-      }
+//      function adjustToWeatherConditions() {
+//        var cityIDs = '';
+//        for (var i = 0; i < cities.length; i++) {
+//          cityIDs += cities[i][1];
+//          if (i != cities.length - 1) cityIDs += ',';
+//        }
+//        getURL('http://api.openweathermap.org/data/2.5/group?id=' + cityIDs + '&APPID=b5c0b505a8746a1b2cc6b17cdab34535', function(info) {
+//          cityWeather = info.list;
+//          
+//          lookupTimezones(0, cityWeather.length);
+//        });
+//      }
 
-      function lookupTimezones(t, len) {
-        var tz = new TimeZoneDB;
-        
-        tz.getJSON({
-            key: "GPH4A5Q6NGI1",
-            lat: cityWeather[t].coord.lat,
-            lng: cityWeather[t].coord.lon
-        }, function(timeZone){
-            cityTimes.push(new Date(timeZone.timestamp * 1000));
+//      function lookupTimezones(t, len) {
+//        var tz = new TimeZoneDB;
+//        
+//        tz.getJSON({
+//            key: "GPH4A5Q6NGI1",
+//            lat: cityWeather[t].coord.lat,
+//            lng: cityWeather[t].coord.lon
+//        }, function(timeZone){
+//            cityTimes.push(new Date(timeZone.timestamp * 1000));
+//
+//            t++;
+//            if (t < len) lookupTimezones(t, len);
+//            else applyWeatherConditions();
+//        });
+//      }
 
-            t++;
-            if (t < len) lookupTimezones(t, len);
-            else applyWeatherConditions();
-        });
-      }
+//      function applyWeatherConditions() {
+//        displayCurrentCityName(cities[currentCity][0]);
+//
+//        var info = cityWeather[currentCity];
+//
+//        particleRotationSpeed = info.wind.speed / 2; // dividing by 2 just to slow things down 
+//        particleRotationDeg = info.wind.deg;
+//
+//        var timeThere = cityTimes[currentCity] ? cityTimes[currentCity].getUTCHours() : 0,
+//            isDay = timeThere >= 6 && timeThere <= 18;
+//
+//        if (isDay) {
+//          switch (info.weather[0].main) {
+//            case 'Clouds':
+//              currentColorRange = [0, 0.01];
+//              break;
+//            case 'Rain':
+//              currentColorRange = [0.7, 0.1];
+//              break;
+//            case 'Clear':
+//            default:
+//              currentColorRange = [0.6, 0.7];
+//              break;
+//          }
+//        } else {
+//          currentColorRange = [0.69, 0.6];
+//        }
+//
+//        if (currentCity < cities.length-1) currentCity++;
+//        else currentCity = 0;
+//
+//        setTimeout(applyWeatherConditions, 5000);
+//      }
 
-      function applyWeatherConditions() {
-        displayCurrentCityName(cities[currentCity][0]);
+//      function displayCurrentCityName(name) {
+//        scene.remove(currentCityTextMesh);
+//
+//        currentCityText = new THREE.TextGeometry(name, {
+//          size: 4,
+//          height: 1
+//        });
+//        currentCityTextMesh = new THREE.Mesh(currentCityText, new THREE.MeshBasicMaterial({
+//          color: 0xffffff, opacity: 1
+//        }));
+//
+//        currentCityTextMesh.position.y = 10;
+//        currentCityTextMesh.position.z = 20;
+//        currentCityTextMesh.rotation.x = 0;
+//        currentCityTextMesh.rotation.y = -180;
+//
+//        scene.add(currentCityTextMesh);
+//      }
 
-        var info = cityWeather[currentCity];
+//      function animate() {
+//        var elapsedSeconds = clock.getElapsedTime(),
+//            particleRotationDirection = particleRotationDeg <= 180 ? -1 : 1;
+//
+//        particles.rotation.y = elapsedSeconds * particleRotationSpeed * particleRotationDirection;
+//        
+//        // We check if the color range has changed, if so, we'll change the colours
+//        if (lastColorRange[0] != currentColorRange[0] && lastColorRange[1] != currentColorRange[1]) {
+//
+//          for (var i = 0; i < totalParticles; i++) {
+//            particles.children[i].material.color.setHSL(currentColorRange[0], currentColorRange[1], (Math.random() * (0.7 - 0.2) + 0.2));
+//          }
+//
+//          lastColorRange = currentColorRange;
+//        }
 
-        particleRotationSpeed = info.wind.speed / 2; // dividing by 2 just to slow things down 
-        particleRotationDeg = info.wind.deg;
-
-        var timeThere = cityTimes[currentCity] ? cityTimes[currentCity].getUTCHours() : 0,
-            isDay = timeThere >= 6 && timeThere <= 18;
-
-        if (isDay) {
-          switch (info.weather[0].main) {
-            case 'Clouds':
-              currentColorRange = [0, 0.01];
-              break;
-            case 'Rain':
-              currentColorRange = [0.7, 0.1];
-              break;
-            case 'Clear':
-            default:
-              currentColorRange = [0.6, 0.7];
-              break;
-          }
-        } else {
-          currentColorRange = [0.69, 0.6];
-        }
-
-        if (currentCity < cities.length-1) currentCity++;
-        else currentCity = 0;
-
-        setTimeout(applyWeatherConditions, 5000);
-      }
-
-      function displayCurrentCityName(name) {
-        scene.remove(currentCityTextMesh);
-
-        currentCityText = new THREE.TextGeometry(name, {
-          size: 4,
-          height: 1
-        });
-        currentCityTextMesh = new THREE.Mesh(currentCityText, new THREE.MeshBasicMaterial({
-          color: 0xffffff, opacity: 1
-        }));
-
-        currentCityTextMesh.position.y = 10;
-        currentCityTextMesh.position.z = 20;
-        currentCityTextMesh.rotation.x = 0;
-        currentCityTextMesh.rotation.y = -180;
-
-        scene.add(currentCityTextMesh);
-      }
-
-      function animate() {
-        var elapsedSeconds = clock.getElapsedTime(),
-            particleRotationDirection = particleRotationDeg <= 180 ? -1 : 1;
-
-        particles.rotation.y = elapsedSeconds * particleRotationSpeed * particleRotationDirection;
-        
-        // We check if the color range has changed, if so, we'll change the colours
-        if (lastColorRange[0] != currentColorRange[0] && lastColorRange[1] != currentColorRange[1]) {
-
-          for (var i = 0; i < totalParticles; i++) {
-            particles.children[i].material.color.setHSL(currentColorRange[0], currentColorRange[1], (Math.random() * (0.7 - 0.2) + 0.2));
-          }
-
-          lastColorRange = currentColorRange;
-        }
-
-        requestAnimationFrame(animate);
-
-        update(clock.getDelta());
-        render(clock.getDelta());
-      }
+//        requestAnimationFrame(animate);
+//
+//        update(clock.getDelta());
+//        render(clock.getDelta());
+//      }
 
       function resize() {
         var width = container.offsetWidth;
@@ -271,9 +271,7 @@
 
       function update(dt) {
         resize();
-
         camera.updateProjectionMatrix();
-
         controls.update(dt);
       }
 
