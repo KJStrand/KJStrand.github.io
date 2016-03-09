@@ -131,10 +131,17 @@
         //floor2.position.set(0, 30, -30)
         //scene.add(floor2);
         
-        var floor3 = new THREE.Mesh(geometry, floorMaterial);
-        floor3.rotation.z = Math.PI / 2;
-        floor3.position.set(0, 30, -30)
-        scene.add(floor3);
+        //Back wall
+        var backWall = new THREE.Mesh(geometry, floorMaterial);
+        backWall.rotation.z = Math.PI / 2;
+        backWall.position.set(0, 30, -30)
+        scene.add(backWall);
+        
+        //Front wall
+        var frontWall = new THREE.Mesh(geometry, floorMaterial);
+        frontWall.rotation.z = -Math.PI / 2;
+        frontWall.position.set(0, -30, -30)
+        scene.add(frontWall);
         
 
 //        var particleTexture = THREE.ImageUtils.loadTexture('textures/particle.png'),
