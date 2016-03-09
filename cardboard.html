@@ -126,6 +126,16 @@
         floor.position.set(0, 30, -30)
         scene.add(floor);
         
+        var floor2 = new THREE.Mesh(geometry, floorMaterial);
+        floor2.rotation.z = -Math.PI / 2;
+        floor2.position.set(0, 30, -30)
+        scene.add(floor2);
+        
+        var floor3 = new THREE.Mesh(geometry, floorMaterial);
+        floor3.rotation.z = Math.PI / 2;
+        floor3.position.set(0, 30, -30)
+        scene.add(floor3);
+        
 
 //        var particleTexture = THREE.ImageUtils.loadTexture('textures/particle.png'),
 //            spriteMaterial = new THREE.SpriteMaterial({
