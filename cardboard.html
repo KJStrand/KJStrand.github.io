@@ -110,6 +110,7 @@
         floorTexture.wrapT = THREE.RepeatWrapping;
         floorTexture.repeat = new THREE.Vector2(480, 185);
         floorTexture.anisotropy = renderer.getMaxAnisotropy();
+        floorTexture.minFilter = THREE.LinearFilter
 
         var floorMaterial = new THREE.MeshPhongMaterial({
           color: 0xffffff,
