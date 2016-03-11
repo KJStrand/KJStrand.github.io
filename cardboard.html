@@ -20,7 +20,8 @@
   </head>
   <body>
     <div id="webglviewer"></div>
-
+    
+    <script src="//cdnjs.cloudflare.com/ajax/libs/three.js/r69/three.min.js"></script>
     <script src="./js/three.min.js"></script>
     <script src="./js/StereoEffect.js"></script>
     <script src="./js/DeviceOrientationControls.js"></script>
@@ -124,7 +125,7 @@
         var floor = new THREE.Mesh(geometry, floorMaterial);
         floor.rotation.x = -Math.PI / 2;
         //floor.position.set(0, 30, -30)
-        scene.add(floor);
+        //scene.add(floor);
         
         //var floor2 = new THREE.Mesh(geometry, floorMaterial);
         //floor2.rotation.z = -Math.PI / 2;
@@ -135,13 +136,7 @@
         var backWall = new THREE.Mesh(geometry, floorMaterial);
         backWall.rotation.z = Math.PI / 2;
         backWall.position.set(0, 30, -30)
-        scene.add(backWall);
-        
-        //Front wall
-        var frontWall = new THREE.Mesh(geometry, floorMaterial);
-        frontWall.rotation.z = -Math.PI / 2;
-        frontWall.position.set(0, -30, -30)
-        scene.add(frontWall);
+        //scene.add(backWall);
         
         //Add photosphere
         // creation of a big sphere geometry
