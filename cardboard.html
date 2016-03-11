@@ -143,6 +143,18 @@
         frontWall.position.set(0, -30, -30)
         scene.add(frontWall);
         
+        //Add photosphere
+        // creation of a big sphere geometry
+  			var sphere = new THREE.SphereGeometry(100, 100, 40);
+  			sphere.applyMatrix(new THREE.Matrix4().makeScale(-1, 1, 1));
+   
+  			// creation of the sphere material
+  			var sphereMaterial = new THREE.MeshBasicMaterial();
+  			sphereMaterial.map = THREE.ImageUtils.loadTexture(panoramasArray[panoramaNumber])
+   
+  			// geometry + material = mesh (actual object)
+  			var sphereMesh = new THREE.Mesh(sphere, sphereMaterial);
+  			scene.add(sphereMesh);
 
 //        var particleTexture = THREE.ImageUtils.loadTexture('textures/particle.png'),
 //            spriteMaterial = new THREE.SpriteMaterial({
