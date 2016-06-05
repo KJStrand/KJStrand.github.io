@@ -17,18 +17,21 @@
                      rotation="0 100 0" scale="0.8 0.8 0.8"></a-curvedimage>
 
       <!-- Defining the URL inline. Not recommended but more comfortable for web developers. -->
-      <a-curvedimage  src="https://upload.wikimedia.org/wikipedia/commons/5/51/Google.png"></a-curvedimage>
-      <a-curvedimage position="-2 -2 0" src="https://upload.wikimedia.org/wikipedia/commons/5/51/Google.png"></a-curvedimage>
+      
+      <a-curvedimage position="0 0 0" theta-length="360" height="3.0" stereo="eye:left" src="http://kjstrand.github.io/testvr/left.png"></a-curvedimage>
+      <a-curvedimage position="0 0 0" theta-length="360" height="3.0" stereo="eye:right" src="http://kjstrand.github.io/testvr/right.png"></a-curvedimage>
 
     <a-sky color="#73F7DD"></a-sky>
+      
+      <a-entity position="0 0 0">
+  <a-camera></a-camera>
+</a-entity>
       
  </a-scene>
 
 
 
-<a-entity position="0 0 5">
-  <a-camera></a-camera>
-</a-entity>
+
 
 
   </body>
