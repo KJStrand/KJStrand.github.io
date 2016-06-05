@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Hello, World! • A-Frame</title>
+    <meta name="description" content="Hello, World! • A-Frame">
+    <script src="https://aframe.io/releases/0.2.0/aframe.min.js"></script>
+  </head>
+  <body>
+    <a-scene>
+      <a-assets>
+        <img id="my-image" src="https://upload.wikimedia.org/wikipedia/commons/5/51/Google.png">
+      </a-assets>
+
+      <!-- Using the asset management system. -->
+      <!--a-curvedimage src="#my-image" height="3.0" radius="5.7" theta-length="72"
+                     rotation="0 100 0" scale="0.8 0.8 0.8"></a-curvedimage>
+
+      <!-- Defining the URL inline. Not recommended but more comfortable for web developers. -->
+      <a-curvedimage  src="https://upload.wikimedia.org/wikipedia/commons/5/51/Google.png"></a-curvedimage>
+      <a-curvedimage position="-2 -2 0" src="https://upload.wikimedia.org/wikipedia/commons/5/51/Google.png"></a-curvedimage>
+
+    <a-sky color="#73F7DD"></a-sky>
+      
+ </a-scene>
+
+
+
+<a-entity position="0 0 5">
+  <a-camera></a-camera>
+</a-entity>
+
+
+  </body>
+</html>
