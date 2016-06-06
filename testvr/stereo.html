@@ -5,6 +5,12 @@
 </head>
 <body>
    <a-scene>
+     
+     <a-assets>
+        <img id="left" src="src="http://kjstrand.github.io/testvr/left.png"">
+        <img id="right" src="src="http://kjstrand.github.io/testvr/right.png"">
+     </a-assets>
+     
       <a-sky color="#73F7DD"></a-sky>
       <a-light color="#333" position="0 5 0" type="ambient" intensity="0.2"></a-light>
       <a-light type="point" color="#EEE" intensity="1.0" position="3 3 10"></a-light>
@@ -21,10 +27,10 @@
       <!-- a-entity geometry="primitive: box" material="color: #3546C0" position="0 5 0" stereo="eye: right"></a-entity -->
       
       <a-entity stereo="eye:left">
-        <a-curvedimage position="0 0 0" theta-length="360" radius="5.7" height="3.0" src="http://kjstrand.github.io/testvr/left.png"></a-curvedimage>
+        <a-curvedimage position="0 0 0" theta-length="360" radius="5.7" height="3.0" src="#left"></a-curvedimage>
       </a-entity>
       <a-entity stereo="eye:right">
-        <a-curvedimage position="0 -3 0" theta-length="360" radius="5.7" height="3.0" src="http://kjstrand.github.io/testvr/right.png"></a-curvedimage>
+        <a-curvedimage position="0 -3 0" theta-length="360" radius="5.7" height="3.0" src="#right"></a-curvedimage>
       </a-entity>
 
    </a-scene>
