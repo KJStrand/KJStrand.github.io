@@ -13,8 +13,8 @@
         <img id="right" src="orange.PNG">
         <img id="odell" src="Odell.PNG">
         <img id="shop" src = "Shop.JPG">
-        <a-asset-item id="beer" src="beer/model.dae"></a-asset-item>
-        <a-asset-item id="fat_tire" src="beer/model.dae"></a-asset-item>
+        <a-asset-item id="beer" src="beer/fat_tire.dae"></a-asset-item>
+        <a-asset-item id="fat_tire" src="beer/fat_tire.dae"></a-asset-item>
      </a-assets>
   
       <a-sky src="#shop"></a-sky>
@@ -22,7 +22,7 @@
       <!-- a-light type="point" color="#EEE" intensity="1.0" position="3 3 10"></a-light -->
 
       <a-camera position="0 0 0" >
-          <a-cursor color="white"></a-cursor>
+          <a-cursor color="white" position="0 0 0"></a-cursor>
       </a-camera>
       
       <a-entity collada-model="#beer" position="1 -0.5 0" scale="2.8 2.8 2.8" rotation="0 -90 0"></a-entity>
