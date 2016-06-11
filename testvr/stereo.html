@@ -11,11 +11,12 @@
         <!-- img id="right" src="http://kjstrand.github.io/testvr/right.png" -->
         <img id="left" src="blue.PNG">
         <img id="right" src="orange.PNG">
+        <img id="odell" src="Odell.PNG">
      </a-assets>
      
-      <a-sky src="http://www.newbelgium.com/images/beerlabelsnew/touchmenu_1554.jpg"></a-sky>
-      <a-light color="#333" position="0 5 0" type="ambient" intensity="0.2"></a-light>
-      <a-light type="point" color="#EEE" intensity="1.0" position="3 3 10"></a-light>
+      <a-sky src="#odell"></a-sky>
+      <!-- a-light color="#333" position="0 5 0" type="ambient" intensity="0.2"></a-light -->
+      <!-- a-light type="point" color="#EEE" intensity="1.0" position="3 3 10"></a-light -->
 
       <!-- 'left' eye entities will pass through the camera in non-VR mode -->
 
@@ -29,10 +30,10 @@
       <!-- a-entity geometry="primitive: box" material="color: #3546C0" position="0 5 0" stereo="eye: right"></a-entity -->
       
       <!-- a-entity stereo="eye:left" -->
-      <a-curvedimage position="0 0 0" theta-length="360" radius="5.7" height="3.0" src="#left" ></a-curvedimage>
+      <!-- a-curvedimage position="0 0 0" theta-length="360" radius="5.7" height="3.0" src="#left" ></a-curvedimage -->
       <!-- /a-entity -->
       <!-- a-entity stereo="eye:right" -->
-      <a-curvedimage position="0 -3 0" theta-length="360" radius="5.7" height="3.0" src="#right" stereo="eye:right"></a-curvedimage>
+      <!-- a-curvedimage position="0 -3 0" theta-length="360" radius="5.7" height="3.0" src="#right" stereo="eye:right"></a-curvedimage -->
       <!-- /a-entity -->
 
    </a-scene>
