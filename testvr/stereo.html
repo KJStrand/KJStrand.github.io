@@ -13,8 +13,11 @@
         <img id="right" src="orange.PNG">
         <img id="odell" src="Odell.PNG">
         <img id="shop" src = "Shop.JPG">
-        <a-asset-item id="beer" src="beer/fat_tire.dae"></a-asset-item>
         <a-asset-item id="fat_tire" src="beer/fat_tire.dae"></a-asset-item>
+        <a-asset-item id="slow_ride" src="beer/slow_ride.dae"></a-asset-item>
+        <a-asset-item id="snapshot" src="beer/snapshot.dae"></a-asset-item>
+        <a-asset-item id="sunshine" src="beer/sunshine.dae"></a-asset-item>
+        <a-asset-item id="abbey" src="beer/abbey.dae"></a-asset-item>
      </a-assets>
   
       <a-sky src="#shop"></a-sky>
@@ -25,8 +28,29 @@
           <a-cursor color="white" position="0 0 0"></a-cursor>
       </a-camera>
       
-      <a-entity collada-model="#beer" position="1 -0.5 0" scale="2.8 2.8 2.8" rotation="0 -90 0"></a-entity>
-      <a-entity collada-model="#fat_tire" position="0 -0.5 1" scale="2.8 2.8 2.8" rotation="0 -90 0">
+      <a-entity collada-model="#fat_tire" position="1 -0.5 0" scale="2.8 2.8 2.8" rotation="0 -90 0"></a-entity>
+      <a-entity collada-model="#slow_ride" position="0 -0.5 1" scale="2.8 2.8 2.8" rotation="0 -90 0">
+        <a-animation attribute="rotation"
+               dur="10000"
+               fill="forwards"
+               to="0 360 0"
+               repeat="indefinite"></a-animation>
+      </a-entity>
+      <a-entity collada-model="#snapshot" position="1 -0.5 1" scale="2.8 2.8 2.8" rotation="0 -90 0">
+        <a-animation attribute="rotation"
+               dur="10000"
+               fill="forwards"
+               to="0 360 0"
+               repeat="indefinite"></a-animation>
+      </a-entity>
+      <a-entity collada-model="#sunshine" position="0 -0.5 -1" scale="2.8 2.8 2.8" rotation="0 -90 0">
+        <a-animation attribute="rotation"
+               dur="10000"
+               fill="forwards"
+               to="0 360 0"
+               repeat="indefinite"></a-animation>
+      </a-entity>
+      <a-entity collada-model="#abbey" position="-1 -0.5 1" scale="2.8 2.8 2.8" rotation="0 -90 0">
         <a-animation attribute="rotation"
                dur="10000"
                fill="forwards"
