@@ -1,0 +1,1921 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neo Anderson - Resume</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #000000 0%, #0a0a0a 50%, #050505 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .page-container {
+            background: linear-gradient(180deg, #0a0a0a 0%, #000000 100%);
+            box-shadow: 0 0 60px rgba(34, 197, 94, 0.15), 0 0 120px rgba(74, 222, 128, 0.1);
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-header {
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: #22c55e;
+            border-bottom: 1px solid rgba(34, 197, 94, 0.3);
+            padding-bottom: 0.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .dense-list li {
+            margin-bottom: 0.15rem;
+            line-height: 1.4;
+        }
+
+        .glow-text {
+            text-shadow: 0 0 20px rgba(34, 197, 94, 0.8), 0 0 40px rgba(34, 197, 94, 0.4);
+        }
+
+        .card-hover {
+            transition: all 0.3s ease;
+            border-left: 2px solid transparent;
+        }
+
+        .card-hover:hover {
+            background: rgba(34, 197, 94, 0.05);
+            border-left: 2px solid #4ade80;
+            transform: translateX(4px);
+        }
+
+        /* Timeline connector */
+        .timeline-item {
+            position: relative;
+            padding-left: 12px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            width: 6px;
+            height: 6px;
+            background: linear-gradient(135deg, #22c55e, #4ade80);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            left: 2.5px;
+            top: 16px;
+            width: 1px;
+            height: calc(100% - 8px);
+            background: linear-gradient(180deg, rgba(34, 197, 94, 0.5), transparent);
+        }
+
+        .timeline-item:last-child::after {
+            display: none;
+        }
+
+        /* Link styles */
+        a {
+            color: #4ade80;
+            transition: all 0.2s ease;
+        }
+
+        a:hover {
+            color: #86efac;
+            text-shadow: 0 0 10px rgba(74, 222, 128, 0.5);
+        }
+
+        /* Project cards */
+        .project-card {
+            background: rgba(34, 197, 94, 0.03);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 6px;
+            padding: 8px;
+            margin-bottom: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .project-card:hover {
+            background: rgba(34, 197, 94, 0.1);
+            border-color: rgba(74, 222, 128, 0.4);
+            transform: scale(1.02);
+        }
+
+        /* ============================================
+           EASTER EGG - ANIME IMAGE
+           ============================================ */
+        .easter-egg-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 99999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .easter-egg-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .easter-egg-container {
+            position: relative;
+            transform: scale(0.5) rotate(-10deg);
+            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .easter-egg-overlay.active .easter-egg-container {
+            transform: scale(1) rotate(0deg);
+        }
+
+        .easter-egg-image {
+            max-width: 80vw;
+            max-height: 80vh;
+            border-radius: 20px;
+            box-shadow: 0 0 100px rgba(34, 197, 94, 0.5), 0 0 200px rgba(74, 222, 128, 0.3);
+            border: 3px solid #22c55e;
+        }
+
+        .easter-egg-text {
+            position: absolute;
+            bottom: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #4ade80;
+            font-size: 24px;
+            font-weight: 700;
+            text-shadow: 0 0 20px rgba(34, 197, 94, 0.8);
+            white-space: nowrap;
+        }
+
+        .easter-egg-close {
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            width: 40px;
+            height: 40px;
+            background: #22c55e;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .easter-egg-close:hover {
+            transform: scale(1.2) rotate(90deg);
+            background: #4ade80;
+        }
+
+        /* Name click hint */
+        .clickable-name {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .clickable-name:hover {
+            filter: brightness(1.3);
+        }
+
+        /* Matrix rain effect for easter egg */
+        .matrix-rain {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        /* ============================================
+           SKILLS EXPLOSION ZONE
+           ============================================ */
+
+        .skills-section {
+            position: relative;
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .skills-section::before {
+            display: none;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
+        }
+
+        /* The overlay that covers everything */
+        .skills-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(ellipse at center, rgba(0, 10, 0, 0.97) 0%, rgba(0, 5, 0, 0.99) 100%);
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(20px);
+        }
+
+        .skills-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .skills-overlay .close-btn {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            font-size: 24px;
+            color: #22c55e;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10001;
+        }
+
+        .skills-overlay .close-btn:hover {
+            color: #4ade80;
+            transform: rotate(90deg) scale(1.2);
+        }
+
+        /* Floating skill orbs */
+        .skill-orb {
+            position: absolute;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.3), rgba(74, 222, 128, 0.3));
+            border: 1px solid rgba(34, 197, 94, 0.5);
+            border-radius: 50px;
+            color: #bbf7d0;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: grab;
+            user-select: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 30px rgba(34, 197, 94, 0.3);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .skill-orb:hover {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.6), rgba(74, 222, 128, 0.6));
+            transform: scale(1.15);
+            box-shadow: 0 0 50px rgba(34, 197, 94, 0.6), 0 0 100px rgba(74, 222, 128, 0.4);
+        }
+
+        .skill-orb:active {
+            cursor: grabbing;
+        }
+
+        .skill-orb.dragging {
+            transition: none;
+            animation: none;
+            z-index: 10002;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            33% { transform: translateY(-15px) rotate(2deg); }
+            66% { transform: translateY(10px) rotate(-2deg); }
+        }
+
+        /* Category labels */
+        .category-label {
+            position: absolute;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: #22c55e;
+            text-shadow: 0 0 20px rgba(34, 197, 94, 0.8);
+        }
+
+        /* Connecting lines canvas */
+        #connections-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10000;
+        }
+
+        /* Particle canvas */
+        #particle-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9998;
+        }
+
+        /* Mini skill tags in normal view */
+        .skill-tag-mini {
+            display: inline-block;
+            padding: 3px 8px;
+            margin: 2px;
+            border-radius: 4px;
+            font-size: 9px;
+            background: rgba(34, 197, 94, 0.2);
+            color: #86efac;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+            /* Hidden initially */
+            opacity: 0;
+            transform: scale(0.5) translateY(10px);
+            pointer-events: none;
+        }
+
+        .skill-tag-mini.revealed {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            pointer-events: auto;
+            animation: skillReveal 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        @keyframes skillReveal {
+            0% {
+                opacity: 0;
+                transform: scale(0.3) translateY(15px);
+                filter: blur(4px);
+                background: rgba(249, 115, 22, 0.6);
+                border-color: #f97316;
+                box-shadow: 0 0 20px rgba(249, 115, 22, 0.8);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.2) translateY(-3px);
+                filter: blur(0);
+                background: rgba(249, 115, 22, 0.4);
+                border-color: #fb923c;
+                box-shadow: 0 0 15px rgba(249, 115, 22, 0.6);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+                filter: blur(0);
+                background: rgba(34, 197, 94, 0.2);
+                border-color: rgba(34, 197, 94, 0.3);
+                box-shadow: none;
+            }
+        }
+
+        /* Category labels hidden until skills revealed */
+        .skills-category-label {
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .skills-category-label.revealed {
+            opacity: 1;
+        }
+
+        .skill-tag-mini:hover {
+            background: rgba(34, 197, 94, 0.5);
+            border-color: #22c55e;
+            transform: translateY(-3px) scale(1.1);
+            box-shadow: 0 8px 25px rgba(34, 197, 94, 0.4);
+        }
+
+        .skill-tag-mini::after {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 6px;
+            background: linear-gradient(135deg, #22c55e, #4ade80, #86efac);
+            opacity: 0;
+            z-index: -1;
+            filter: blur(8px);
+            transition: opacity 0.3s ease;
+        }
+
+        .skill-tag-mini:hover::after {
+            opacity: 0.6;
+        }
+
+        /* Skill section glow effect on hover */
+        .skills-section:hover {
+            background: rgba(34, 197, 94, 0.05);
+            border-radius: 12px;
+        }
+
+        .skills-section:hover .skill-tag-mini {
+            animation: wiggle 0.5s ease;
+        }
+
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-3deg); }
+            75% { transform: rotate(3deg); }
+        }
+
+        /* Matrix screen enhancement on skills section hover */
+        .skills-section:hover .matrix-screen {
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8), 0 0 20px rgba(34, 197, 94, 0.4);
+            border-color: rgba(34, 197, 94, 0.5);
+        }
+
+        /* ============================================
+           MATRIX SKILLS SCREEN
+           ============================================ */
+        .matrix-screen {
+            position: relative;
+            width: 100%;
+            height: 140px;
+            background: #000;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8), 0 0 10px rgba(34, 197, 94, 0.2);
+            cursor: pointer;
+        }
+
+        .matrix-screen::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                to bottom,
+                rgba(34, 197, 94, 0.03) 0%,
+                transparent 50%,
+                rgba(34, 197, 94, 0.03) 100%
+            );
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .matrix-screen::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.1) 0px,
+                rgba(0, 0, 0, 0.1) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        .matrix-screen-canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .matrix-screen-hint {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #22c55e;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            opacity: 0.6;
+            z-index: 1;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .matrix-screen:hover .matrix-screen-hint {
+            opacity: 0;
+        }
+
+        .matrix-screen.active .matrix-screen-hint {
+            opacity: 0;
+        }
+
+        /* Morphing blob background */
+        .blob-bg {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(74, 222, 128, 0.1));
+            border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+            animation: morph 8s ease-in-out infinite;
+            filter: blur(40px);
+            z-index: -1;
+        }
+
+        @keyframes morph {
+            0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+            50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+        }
+
+        /* Glowing ring around skills section */
+        .skills-glow-ring {
+            position: absolute;
+            inset: -4px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #22c55e, #4ade80, #86efac, #22c55e);
+            background-size: 300% 300%;
+            opacity: 0;
+            z-index: -1;
+            transition: opacity 0.5s ease;
+            animation: gradient-rotate 3s linear infinite;
+        }
+
+        .skills-section:hover .skills-glow-ring {
+            opacity: 0.3;
+        }
+
+        @keyframes gradient-rotate {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Instruction text */
+        .click-instruction {
+            text-align: center;
+            font-size: 10px;
+            color: #22c55e;
+            margin-top: 8px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .skills-section:hover .click-instruction {
+            opacity: 1;
+        }
+
+        /* Force graph container */
+        #force-graph {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        /* Skill detail popup */
+        .skill-detail {
+            position: fixed;
+            background: rgba(0, 20, 0, 0.95);
+            border: 1px solid rgba(34, 197, 94, 0.5);
+            border-radius: 12px;
+            padding: 16px 24px;
+            color: #bbf7d0;
+            font-size: 14px;
+            z-index: 10003;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(34, 197, 94, 0.3);
+            max-width: 250px;
+        }
+
+        .skill-detail.visible {
+            opacity: 1;
+        }
+
+        .skill-detail h4 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #22c55e;
+            margin-bottom: 8px;
+        }
+
+        .skill-detail p {
+            font-size: 12px;
+            color: #6ee7b7;
+            line-height: 1.5;
+        }
+
+        .skill-detail .proficiency {
+            margin-top: 12px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .skill-detail .proficiency-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #22c55e, #4ade80);
+            border-radius: 2px;
+            transition: width 0.5s ease;
+        }
+
+        /* ============================================
+           SKILL CONNECTION LINES
+           ============================================ */
+
+        #connection-svg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .connection-path {
+            fill: none;
+            stroke: url(#connection-gradient);
+            stroke-width: 2;
+            stroke-linecap: round;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .connection-path.active {
+            opacity: 1;
+        }
+
+        .connection-dot {
+            fill: #22c55e;
+            filter: drop-shadow(0 0 6px rgba(34, 197, 94, 0.8));
+        }
+
+        .experience-section {
+            transition: all 0.4s ease;
+            position: relative;
+        }
+
+        .experience-section.highlighted {
+            background: rgba(34, 197, 94, 0.15) !important;
+            box-shadow: 0 0 30px rgba(34, 197, 94, 0.3), inset 0 0 20px rgba(34, 197, 94, 0.1);
+            border-color: #22c55e !important;
+        }
+
+        .experience-section.highlighted::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: inherit;
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.3), rgba(74, 222, 128, 0.3));
+            z-index: -1;
+            animation: pulse-glow 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .skill-tag-mini.connecting {
+            background: rgba(34, 197, 94, 0.6) !important;
+            border-color: #4ade80 !important;
+            box-shadow: 0 0 20px rgba(34, 197, 94, 0.6);
+            transform: scale(1.15);
+        }
+
+        /* Skill highlighted from experience hover */
+        .skill-tag-mini.skill-highlighted {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.7), rgba(74, 222, 128, 0.7)) !important;
+            border-color: #86efac !important;
+            box-shadow: 0 0 25px rgba(34, 197, 94, 0.8), 0 0 50px rgba(74, 222, 128, 0.4);
+            transform: scale(1.2) translateY(-2px);
+            z-index: 10;
+            position: relative;
+        }
+
+        .skill-tag-mini.skill-highlighted::before {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #22c55e, #4ade80, #86efac);
+            z-index: -1;
+            opacity: 0.6;
+            animation: skill-ring-pulse 1s ease-in-out infinite;
+        }
+
+        @keyframes skill-ring-pulse {
+            0%, 100% { opacity: 0.4; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
+        }
+
+        /* Experience section hover state for reverse highlighting */
+        .experience-section.exp-hovering {
+            background: rgba(34, 197, 94, 0.08) !important;
+            border-left-color: #22c55e !important;
+        }
+
+        /* Connection endpoint markers */
+        .connection-endpoint {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #22c55e;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(34, 197, 94, 0.8);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 101;
+        }
+
+        .connection-endpoint.active {
+            opacity: 1;
+            animation: endpoint-pulse 1s ease-in-out infinite;
+        }
+
+        @keyframes endpoint-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.5); }
+        }
+
+        @keyframes drawLine {
+            to {
+                stroke-dashoffset: 0;
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Traveling light effect along the path */
+        .connection-path.active {
+            animation: drawLine 0.5s ease-out forwards, pathGlow 1.5s ease-in-out 0.5s infinite;
+        }
+
+        @keyframes pathGlow {
+            0%, 100% {
+                stroke-width: 2;
+                filter: url(#glow);
+            }
+            50% {
+                stroke-width: 3;
+                filter: url(#glow) brightness(1.3);
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen p-8 flex justify-center items-start">
+
+    <!-- Connection Lines SVG -->
+    <svg id="connection-svg">
+        <defs>
+            <linearGradient id="connection-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color:#22c55e;stop-opacity:0.8" />
+                <stop offset="50%" style="stop-color:#4ade80;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#86efac;stop-opacity:0.8" />
+            </linearGradient>
+            <filter id="glow">
+                <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                <feMerge>
+                    <feMergeNode in="coloredBlur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+            </filter>
+        </defs>
+        <g id="connection-lines"></g>
+    </svg>
+
+    <!-- Easter Egg Overlay -->
+    <div class="easter-egg-overlay" id="easter-egg-overlay">
+        <canvas class="matrix-rain" id="matrix-rain"></canvas>
+        <div class="easter-egg-container">
+            <div class="easter-egg-close" id="easter-egg-close">✕</div>
+            <!-- Replace the src below with your anime bread-dipping image path -->
+            <img src="bread_dipper.jpeg"
+                 class="easter-egg-image"
+                 id="easter-egg-img"
+                 alt="The One"
+                 onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27400%27 height=%27400%27%3E%3Crect fill=%27%23111%27 width=%27400%27 height=%27400%27/%3E%3Ctext x=%27200%27 y=%27180%27 text-anchor=%27middle%27 fill=%27%2322c55e%27 font-size=%2716%27%3EPlace image here%3C/text%3E%3Ctext x=%27200%27 y=%27210%27 text-anchor=%27middle%27 fill=%27%2322c55e%27 font-size=%2716%27%3Ein the same folder%3C/text%3E%3C/svg%3E'">
+            <div class="easter-egg-text">There Is No Spoon</div>
+        </div>
+    </div>
+
+    <!-- Skills Explosion Overlay -->
+    <div class="skills-overlay" id="skills-overlay">
+        <div class="close-btn" id="close-overlay">✕</div>
+        <canvas id="particle-canvas"></canvas>
+        <canvas id="connections-canvas"></canvas>
+        <svg id="force-graph"></svg>
+    </div>
+
+    <!-- Skill Detail Popup -->
+    <div class="skill-detail" id="skill-detail">
+        <h4 id="detail-title">Skill Name</h4>
+        <p id="detail-desc">Description goes here</p>
+        <div class="proficiency">
+            <div class="proficiency-fill" id="detail-proficiency" style="width: 0%"></div>
+        </div>
+    </div>
+
+    <!-- Resume Container -->
+    <div class="page-container w-[8.5in] min-h-[11in] flex flex-col relative text-[10px] leading-snug rounded-lg border border-green-500/20">
+
+        <!-- Header -->
+        <header class="px-6 py-5 border-b border-green-500/30">
+            <div class="flex justify-between items-end">
+                <div>
+                    <h1 class="text-4xl font-bold tracking-tight mb-1 glow-text bg-gradient-to-r from-green-400 via-emerald-400 to-lime-400 bg-clip-text text-transparent clickable-name" id="clickable-name">Neo Anderson</h1>
+                    <p class="text-sm text-green-300 font-medium tracking-wide">Principal Reality Architect — Simulation Systems</p>
+                </div>
+                <div class="text-right text-[11px] text-slate-400 leading-tight">
+                    <p class="text-slate-300">Zion, The Real World · 555-THE-ONE1</p>
+                    <p><a href="mailto:neo@thematrix.io">neo@thematrix.io</a></p>
+                    <div class="flex gap-2 justify-end mt-1">
+                        <a href="https://linkedin.com/in/theone" class="font-medium">linkedin.com/in/theone</a>
+                        <span class="text-slate-600">|</span>
+                        <a href="https://github.com/FollowTheWhiteRabbit" class="font-medium">github.com/FollowTheWhiteRabbit</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content Grid -->
+        <div class="flex flex-1">
+
+            <!-- Left Column: Experience (70%) -->
+            <div class="w-[70%] p-6 pr-4 border-r border-green-500/20">
+                <h2 class="section-header">Professional Experience</h2>
+
+                <!-- Zion Defense Systems -->
+                <div class="mb-4 timeline-item card-hover rounded p-2 -ml-2 experience-section" id="exp-apple" data-skills="cpp,python,swift,objc,mlx,pytorch,numpy,arkit,realitykit">
+                    <div class="flex justify-between items-baseline mb-1">
+                        <h3 class="text-base font-bold text-white">Zion Defense Systems</h3>
+                        <span class="text-[10px] font-semibold text-green-400 uppercase tracking-wide">The Real World · 2021 – Present</span>
+                    </div>
+
+                    <div class="mb-1">
+                        <div class="mb-1">
+                            <h4 class="font-bold text-green-300">Principal Reality Architect <span class="text-slate-500 font-medium text-[10px]">(Oct 2025 – Present)</span></h4>
+                        </div>
+                        <div class="mb-1">
+                            <h4 class="font-bold text-green-400/80">Senior Simulation Engineer, Anomaly Detection <span class="text-slate-500 font-normal text-[10px]">(2021 – Oct 2025)</span></h4>
+                        </div>
+                        <ul class="list-disc ml-3 space-y-0.5 dense-list marker:text-green-400 pl-1 text-slate-300">
+                            <li><strong class="text-green-300">Lead Anomaly Engineer</strong> for core Matrix detection frameworks identifying glitches in the simulation. Owned end-to-end implementation under real-time, stealth, and accuracy constraints.</li>
+                            <li><strong class="text-green-300">Déjà Vu Detection:</strong> Led engineering for temporal loop identification powering agent evasion systems. Built pattern recognition pipelines resilient to Agent interference and environmental noise.</li>
+                            <li><strong class="text-green-300">Redpill Safety:</strong> Designed runtime awakening protocols and extraction coordination for pod-bound humans. Shipped frameworks integrated with hovercraft and broadcast systems.</li>
+                            <li><strong class="text-green-300">Prototyping:</strong> Led rapid prototyping of experimental constructs for Council review, translating Oracle visions into demos spanning weapons training, jump programs, and operator interfaces.</li>
+                            <li>Developed and shipped core algorithmic components for combat training simulations with strict real-time performance constraints.</li>
+                            <li>Collaborated with Morpheus to productize experimental liberation models into robust resistance frameworks and field APIs.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Metacortex -->
+                <div class="mb-4 timeline-item card-hover rounded p-2 -ml-2 experience-section" id="exp-hp" data-skills="cpp,python,csharp,pytorch,tensorflow,opencv,numpy,onnx,unity,unreal">
+                    <div class="flex justify-between items-baseline mb-1">
+                        <h3 class="text-sm font-bold text-white">Metacortex Corporation</h3>
+                        <span class="text-[10px] font-semibold text-green-400 uppercase tracking-wide">The Matrix</span>
+                    </div>
+                    <div class="flex justify-between items-baseline mb-1">
+                        <h4 class="font-bold text-green-400/80">Senior Software Developer, Simulation Division</h4>
+                        <span class="text-[10px] font-medium text-slate-500">2019 – 2021</span>
+                    </div>
+                    <ul class="list-disc ml-3 space-y-0.5 dense-list marker:text-green-400 pl-1 text-slate-300">
+                        <li>Core engineer for the <strong class="text-green-300">Metacortex Neural Interface</strong> platform, developing simulation software in C++, C#, and Python.</li>
+                        <li>Implemented real-time consciousness streaming pipelines and pod synchronization (neural linking, dream state) for human batteries.</li>
+                        <li>Collaborated with Architect Division to deliver the first simulation offering real-time adjustment of human perception using deep learning.</li>
+                        <li>Code Owner for Construct Builder and Training Program plugins.</li>
+                    </ul>
+                </div>
+
+                <!-- White Rabbit Consulting -->
+                <div class="mb-4 timeline-item card-hover rounded p-2 -ml-2 experience-section" id="exp-bluepenguin" data-skills="csharp,js,arkit,unity,threejs">
+                    <div class="flex justify-between items-baseline mb-1">
+                        <h3 class="text-sm font-bold text-white">White Rabbit Consulting</h3>
+                        <span class="text-[10px] font-semibold text-green-400 uppercase tracking-wide">The Matrix</span>
+                    </div>
+                    <div class="flex justify-between items-baseline mb-1">
+                        <h4 class="font-bold text-green-400/80">Founder & Chief Hacker</h4>
+                        <span class="text-[10px] font-medium text-slate-500">2016 – 2019</span>
+                    </div>
+                    <ul class="list-disc ml-3 space-y-0.5 dense-list marker:text-green-400 pl-1 text-slate-300">
+                        <li>Founded underground consultancy delivering custom exploit systems for freedom fighters, awakened humans, and redpill candidates.</li>
+                        <li>Shipped experiences across neural jacks, hardline phones, and mobile constructs (Android, iOS, Operator consoles) for clients including The Nebuchadnezzar crew and Zion Council.</li>
+                        <li>Speaker at Underground Hacker Summit, Machine City Infiltration Conference, Construct Design Festival, and Zion Technical Symposium.</li>
+                        <li>Contributed open-source Matrix visualization components extending operator HUD systems.</li>
+                    </ul>
+                </div>
+
+                <!-- Early Career -->
+                <div class="mb-3">
+                    <h2 class="section-header mt-4">Early Career & Training Programs</h2>
+
+                    <div class="grid grid-cols-2 gap-2 text-[9px]">
+                        <div class="card-hover rounded p-2 experience-section" id="exp-csu" data-skills="unity">
+                            <h3 class="font-bold text-slate-200">Zion Academy</h3>
+                            <p class="text-green-400 text-[8px]">Construct Design Lead · 2016–2017</p>
+                            <p class="text-slate-400 mt-1">Led simulation/construct integration across resistance; managed 4-operator team; organized first Zion Hackathon.</p>
+                        </div>
+                        <div class="card-hover rounded p-2 experience-section" id="exp-amadeus" data-skills="cpp,opencv,numpy">
+                            <h3 class="font-bold text-slate-200">Oracle Systems Inc.</h3>
+                            <p class="text-green-400 text-[8px]">Prophecy Vision Developer · 2016–2017</p>
+                            <p class="text-slate-400 mt-1">Built proprietary vision system with sub-pixel future detection, probability analysis, and timeline error correction.</p>
+                        </div>
+                        <div class="card-hover rounded p-2 experience-section" id="exp-hpe" data-skills="python">
+                            <h3 class="font-bold text-slate-200">Machine City Power Grid</h3>
+                            <p class="text-green-400 text-[8px]">Pod Systems Test Intern · Summer 2015</p>
+                            <p class="text-slate-400 mt-1">Engineered human battery reset process; interim lead for cross-field power distribution.</p>
+                        </div>
+                        <div class="card-hover rounded p-2 experience-section" id="exp-bounce" data-skills="python,js">
+                            <h3 class="font-bold text-slate-200">Nebuchadnezzar Crew</h3>
+                            <p class="text-green-400 text-[8px]">Junior Operator Intern · 2013–2014</p>
+                            <p class="text-slate-400 mt-1">Hovercraft systems development; broadcast signal automation lab.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Right Column: Skills & Education (30%) -->
+            <div class="w-[30%] p-6 pl-4 bg-gradient-to-b from-green-950/30 to-transparent">
+
+                <!-- Education -->
+                <section class="mb-4">
+                    <h2 class="section-header">Education</h2>
+
+                    <div class="mb-3 experience-section" id="exp-edu-csu">
+                        <h3 class="font-bold text-white">Zion Technical Institute</h3>
+                        <p class="text-slate-300 mt-0.5">B.S. Reality Engineering & B.S. Simulation Science</p>
+                        <p class="text-slate-400">Construct Design Minor</p>
+                        <p class="text-green-400 mt-0.5 font-medium">The One Honors • GPA: ∞</p>
+                        <p class="text-slate-500 text-[9px]">Morpheus Achievement Award, Oracle's Choice Scholar</p>
+                    </div>
+
+                    <div class="experience-section" id="exp-ai-healthcare" data-skills="python,pytorch,tensorflow,numpy">
+                        <h3 class="font-bold text-white">AI for Human Liberation</h3>
+                        <p class="text-slate-500 text-[9px]">Resistance Training, 2020</p>
+                        <div class="flex flex-wrap mt-1">
+                            <span class="skill-tag-mini">Agent Detection</span>
+                            <span class="skill-tag-mini">PyTorch</span>
+                            <span class="skill-tag-mini">TensorFlow</span>
+                            <span class="skill-tag-mini">Anomaly Analysis</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SKILLS SECTION - THE MAGIC ZONE -->
+                <section class="skills-section mb-4 p-3 -m-3 relative" id="skills-section">
+                    <div class="skills-glow-ring"></div>
+                    <div class="blob-bg" style="top: -50px; left: -50px;"></div>
+
+                    <h2 class="section-header">Technical Skills</h2>
+
+                    <!-- Matrix Skills Screen -->
+                    <div class="matrix-screen" id="matrix-screen">
+                        <canvas class="matrix-screen-canvas" id="skills-matrix-canvas"></canvas>
+                        <div class="matrix-screen-hint">Follow the white rabbit</div>
+                    </div>
+
+                    <!-- Skill Tags -->
+                    <div class="mt-3">
+                        <p class="text-[8px] text-green-400 uppercase tracking-wider mb-1 skills-category-label" data-category="languages">Languages</p>
+                        <div class="flex flex-wrap">
+                            <span class="skill-tag-mini" data-skill="cpp" data-desc="Modern C++ for high-performance systems" data-prof="95" data-connections="exp-apple,exp-hp,exp-amadeus">C++ (17)</span>
+                            <span class="skill-tag-mini" data-skill="python" data-desc="ML, prototyping, and automation" data-prof="90" data-connections="exp-apple,exp-hp,exp-ai-healthcare,exp-bounce">Python</span>
+                            <span class="skill-tag-mini" data-skill="swift" data-desc="iOS/visionOS development" data-prof="85" data-connections="exp-apple">Swift</span>
+                            <span class="skill-tag-mini" data-skill="objc" data-desc="Legacy iOS and system frameworks" data-prof="80" data-connections="exp-apple">Objective-C</span>
+                            <span class="skill-tag-mini" data-skill="csharp" data-desc="Unity and enterprise development" data-prof="85" data-connections="exp-hp,exp-bluepenguin">C#</span>
+                            <span class="skill-tag-mini" data-skill="js" data-desc="Web and visualization" data-prof="75" data-connections="exp-bluepenguin,exp-bounce">JavaScript</span>
+                        </div>
+
+                        <p class="text-[8px] text-green-400 uppercase tracking-wider mb-1 mt-2 skills-category-label" data-category="ml">ML & Scientific</p>
+                        <div class="flex flex-wrap">
+                            <span class="skill-tag-mini" data-skill="mlx" data-desc="Apple Silicon ML framework" data-prof="85" data-connections="exp-apple">MLX</span>
+                            <span class="skill-tag-mini" data-skill="pytorch" data-desc="Deep learning research & production" data-prof="90" data-connections="exp-apple,exp-hp,exp-ai-healthcare">PyTorch</span>
+                            <span class="skill-tag-mini" data-skill="tensorflow" data-desc="Production ML pipelines" data-prof="85" data-connections="exp-hp,exp-ai-healthcare">TensorFlow</span>
+                            <span class="skill-tag-mini" data-skill="opencv" data-desc="Computer vision algorithms" data-prof="90" data-connections="exp-hp,exp-amadeus">OpenCV</span>
+                            <span class="skill-tag-mini" data-skill="numpy" data-desc="Numerical computing" data-prof="95" data-connections="exp-apple,exp-hp,exp-amadeus,exp-ai-healthcare">NumPy</span>
+                            <span class="skill-tag-mini" data-skill="onnx" data-desc="Cross-platform ML deployment" data-prof="80" data-connections="exp-hp">ONNX</span>
+                        </div>
+
+                        <p class="text-[8px] text-green-400 uppercase tracking-wider mb-1 mt-2 skills-category-label" data-category="xr">XR Platforms</p>
+                        <div class="flex flex-wrap">
+                            <span class="skill-tag-mini" data-skill="arkit" data-desc="iOS AR development" data-prof="90" data-connections="exp-apple,exp-bluepenguin">ARKit</span>
+                            <span class="skill-tag-mini" data-skill="realitykit" data-desc="visionOS 3D rendering" data-prof="90" data-connections="exp-apple">RealityKit</span>
+                            <span class="skill-tag-mini" data-skill="unity" data-desc="Cross-platform XR development" data-prof="85" data-connections="exp-hp,exp-bluepenguin,exp-csu">Unity</span>
+                            <span class="skill-tag-mini" data-skill="unreal" data-desc="High-fidelity XR experiences" data-prof="75" data-connections="exp-hp">Unreal</span>
+                            <span class="skill-tag-mini" data-skill="threejs" data-desc="WebGL 3D graphics" data-prof="80" data-connections="exp-bluepenguin">Three.js</span>
+                        </div>
+                    </div>
+
+                    <p class="click-instruction">⚡ Click to explore skill universe</p>
+                </section>
+
+                <!-- Training Simulations -->
+                <section>
+                    <h2 class="section-header">Training Simulations</h2>
+
+                    <div class="project-card">
+                        <h3 class="font-bold text-slate-200 text-[9px]">Agent Detection & Tracking</h3>
+                        <p class="text-slate-400 text-[8px]">AI system using MOG, Kalman filter, SIFT, HOG, Smith detection</p>
+                    </div>
+
+                    <div class="project-card">
+                        <h3 class="font-bold text-slate-200 text-[9px]">Sentinel Calibration System</h3>
+                        <p class="text-slate-400 text-[8px]">3D calibration for 6-axis squid machines; RAPID; deployed to tunnels</p>
+                    </div>
+
+                    <div class="project-card">
+                        <h3 class="font-bold text-slate-200 text-[9px]">Bullet Time Renderer</h3>
+                        <p class="text-slate-400 text-[8px]">From-scratch renderer with time dilation, reflections, trajectory mapping</p>
+                    </div>
+
+                    <div class="project-card">
+                        <h3 class="font-bold text-slate-200 text-[9px]">Hovercraft Power Systems</h3>
+                        <p class="text-slate-400 text-[8px]">EMP-resistant control system; MATLAB/Simulink; broadcast wiring</p>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // SKILL DATA
+        // ============================================
+        const skillsData = {
+            languages: [
+                { name: "C++ (17)", category: "languages", x: 0, y: 0 },
+                { name: "Python", category: "languages", x: 0, y: 0 },
+                { name: "Swift", category: "languages", x: 0, y: 0 },
+                { name: "Objective-C", category: "languages", x: 0, y: 0 },
+                { name: "C#", category: "languages", x: 0, y: 0 },
+                { name: "JavaScript", category: "languages", x: 0, y: 0 },
+            ],
+            ml: [
+                { name: "MLX", category: "ml", x: 0, y: 0 },
+                { name: "PyTorch", category: "ml", x: 0, y: 0 },
+                { name: "TensorFlow", category: "ml", x: 0, y: 0 },
+                { name: "OpenCV", category: "ml", x: 0, y: 0 },
+                { name: "NumPy", category: "ml", x: 0, y: 0 },
+                { name: "ONNX", category: "ml", x: 0, y: 0 },
+            ],
+            xr: [
+                { name: "ARKit", category: "xr", x: 0, y: 0 },
+                { name: "RealityKit", category: "xr", x: 0, y: 0 },
+                { name: "Unity", category: "xr", x: 0, y: 0 },
+                { name: "Unreal", category: "xr", x: 0, y: 0 },
+                { name: "Three.js", category: "xr", x: 0, y: 0 },
+            ],
+        };
+
+        const allSkills = [...skillsData.languages, ...skillsData.ml, ...skillsData.xr];
+
+        // Category colors - Matrix themed palette
+        const categoryColors = {
+            languages: "#fb923c",  // Orange - like the highlighted falling code
+            ml: "#22c55e",         // Green - classic Matrix
+            xr: "#22d3ee"          // Cyan - digital/tech feel
+        };
+
+        // ============================================
+        // MATRIX SKILLS SCREEN ANIMATION
+        // ============================================
+        const matrixScreen = document.getElementById('matrix-screen');
+        const skillsMatrixCanvas = document.getElementById('skills-matrix-canvas');
+        const matrixScreenCtx = skillsMatrixCanvas.getContext('2d');
+
+        // Skills to display in orange - all skills
+        const matrixSkillsList = [
+            'C++', 'Python', 'Swift', 'Objective-C', 'C#', 'JavaScript',
+            'MLX', 'PyTorch', 'TensorFlow', 'OpenCV', 'NumPy', 'ONNX',
+            'ARKit', 'RealityKit', 'Unity', 'Unreal', 'Three.js'
+        ];
+
+        // Matrix characters
+        const matrixChars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789';
+
+        let matrixScreenAnimId = null;
+        let matrixColumns = [];
+        let skillColumns = [];
+        let revealedSkills = new Set();
+        let hasBeenActivated = false;
+
+        // Map skill display names to data-skill values
+        const skillNameMap = {
+            'C++': 'cpp',
+            'Python': 'python',
+            'Swift': 'swift',
+            'MLX': 'mlx',
+            'PyTorch': 'pytorch',
+            'OpenCV': 'opencv',
+            'ARKit': 'arkit',
+            'Unity': 'unity',
+            'NumPy': 'numpy',
+            'ONNX': 'onnx',
+            'TensorFlow': 'tensorflow',
+            'RealityKit': 'realitykit',
+            'Objective-C': 'objc',
+            'C#': 'csharp',
+            'JavaScript': 'js',
+            'Unreal': 'unreal',
+            'Three.js': 'threejs'
+        };
+
+        // Category mapping for labels
+        const skillCategories = {
+            'cpp': 'languages', 'python': 'languages', 'swift': 'languages',
+            'objc': 'languages', 'csharp': 'languages', 'js': 'languages',
+            'mlx': 'ml', 'pytorch': 'ml', 'tensorflow': 'ml',
+            'opencv': 'ml', 'numpy': 'ml', 'onnx': 'ml',
+            'arkit': 'xr', 'realitykit': 'xr', 'unity': 'xr',
+            'unreal': 'xr', 'threejs': 'xr'
+        };
+
+        function revealSkill(skillName) {
+            const skillId = skillNameMap[skillName];
+            if (!skillId || revealedSkills.has(skillId)) return;
+
+            revealedSkills.add(skillId);
+
+            // Find and reveal the skill tag
+            const skillTag = document.querySelector(`.skill-tag-mini[data-skill="${skillId}"]`);
+            if (skillTag) {
+                skillTag.classList.add('revealed');
+            }
+
+            // Reveal the category label if not already revealed
+            const category = skillCategories[skillId];
+            if (category) {
+                const categoryLabel = document.querySelector(`.skills-category-label[data-category="${category}"]`);
+                if (categoryLabel && !categoryLabel.classList.contains('revealed')) {
+                    categoryLabel.classList.add('revealed');
+                }
+            }
+        }
+
+        function revealAllSkills() {
+            // Reveal all skills with staggered timing
+            const allSkillTags = document.querySelectorAll('.skill-tag-mini');
+            allSkillTags.forEach((tag, index) => {
+                setTimeout(() => {
+                    const skillId = tag.dataset.skill;
+                    if (!revealedSkills.has(skillId)) {
+                        revealedSkills.add(skillId);
+                        tag.classList.add('revealed');
+
+                        // Reveal category label
+                        const category = skillCategories[skillId];
+                        if (category) {
+                            const categoryLabel = document.querySelector(`.skills-category-label[data-category="${category}"]`);
+                            if (categoryLabel) categoryLabel.classList.add('revealed');
+                        }
+                    }
+                }, index * 100);
+            });
+        }
+
+        function initMatrixScreen() {
+            // Set canvas size
+            const rect = matrixScreen.getBoundingClientRect();
+            skillsMatrixCanvas.width = rect.width;
+            skillsMatrixCanvas.height = rect.height;
+
+            const fontSize = 10;
+            const columnCount = Math.floor(skillsMatrixCanvas.width / fontSize);
+
+            // Initialize matrix columns
+            matrixColumns = [];
+            for (let i = 0; i < columnCount; i++) {
+                matrixColumns.push({
+                    x: i * fontSize,
+                    y: Math.random() * skillsMatrixCanvas.height,
+                    speed: 0.3 + Math.random() * 0.5,
+                    chars: [],
+                    fontSize: fontSize
+                });
+
+                // Pre-populate with random characters
+                const charCount = Math.floor(skillsMatrixCanvas.height / fontSize);
+                for (let j = 0; j < charCount; j++) {
+                    matrixColumns[i].chars.push(matrixChars[Math.floor(Math.random() * matrixChars.length)]);
+                }
+            }
+
+            // Initialize skill columns (fewer, scattered)
+            skillColumns = [];
+            const skillInterval = Math.floor(columnCount / 4);
+            for (let i = 0; i < 4; i++) {
+                const colIndex = Math.floor(skillInterval * i + Math.random() * skillInterval);
+                const skill = matrixSkillsList[Math.floor(Math.random() * matrixSkillsList.length)];
+                skillColumns.push({
+                    x: colIndex * fontSize,
+                    y: -skill.length * fontSize,
+                    speed: 0.4 + Math.random() * 0.3,
+                    skill: skill,
+                    fontSize: fontSize,
+                    opacity: 1,
+                    delay: i * 30
+                });
+            }
+        }
+
+        function drawMatrixScreen() {
+            const fontSize = 10;
+
+            // Fade effect - slightly stronger for crisper text
+            matrixScreenCtx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+            matrixScreenCtx.fillRect(0, 0, skillsMatrixCanvas.width, skillsMatrixCanvas.height);
+
+            // Draw green matrix rain
+            matrixScreenCtx.font = `bold ${fontSize}px monospace`;
+
+            matrixColumns.forEach((col, colIndex) => {
+                col.y += col.speed;
+
+                if (col.y > skillsMatrixCanvas.height + fontSize * 5) {
+                    col.y = -fontSize * 5;
+                    // Shuffle characters
+                    col.chars = col.chars.map(() => matrixChars[Math.floor(Math.random() * matrixChars.length)]);
+                }
+
+                // Draw column of characters
+                col.chars.forEach((char, charIndex) => {
+                    const y = col.y - charIndex * fontSize;
+                    if (y > 0 && y < skillsMatrixCanvas.height) {
+                        // First char is brightest
+                        if (charIndex === 0) {
+                            matrixScreenCtx.fillStyle = '#bbf7d0';
+                        } else if (charIndex < 3) {
+                            matrixScreenCtx.fillStyle = '#4ade80';
+                        } else {
+                            matrixScreenCtx.fillStyle = `rgba(34, 197, 94, ${Math.max(0.2, 0.7 - charIndex * 0.05)})`;
+                        }
+                        matrixScreenCtx.fillText(char, col.x, y);
+                    }
+                });
+
+                // Occasionally change a random character
+                if (Math.random() > 0.95) {
+                    const randIndex = Math.floor(Math.random() * col.chars.length);
+                    col.chars[randIndex] = matrixChars[Math.floor(Math.random() * matrixChars.length)];
+                }
+            });
+
+            // Draw skill columns in orange
+            skillColumns.forEach((skillCol, index) => {
+                if (skillCol.delay > 0) {
+                    skillCol.delay--;
+                    return;
+                }
+
+                skillCol.y += skillCol.speed;
+
+                // Reveal skill when it reaches middle of screen
+                if (!skillCol.revealed && skillCol.y > skillsMatrixCanvas.height * 0.4) {
+                    skillCol.revealed = true;
+                    revealSkill(skillCol.skill);
+                }
+
+                // Reset when off screen
+                if (skillCol.y > skillsMatrixCanvas.height + skillCol.skill.length * fontSize) {
+                    skillCol.y = -skillCol.skill.length * fontSize;
+                    skillCol.skill = matrixSkillsList[Math.floor(Math.random() * matrixSkillsList.length)];
+                    skillCol.delay = 20 + Math.random() * 40;
+                    skillCol.revealed = false;
+                }
+
+                // Draw skill vertically
+                const skillChars = skillCol.skill.split('');
+                matrixScreenCtx.font = `bold ${fontSize}px monospace`;
+                skillChars.forEach((char, charIndex) => {
+                    const y = skillCol.y + charIndex * fontSize;
+                    if (y > 0 && y < skillsMatrixCanvas.height) {
+                        // Orange gradient - crisp with minimal glow
+                        if (charIndex === 0) {
+                            matrixScreenCtx.fillStyle = '#fcd34d';
+                            matrixScreenCtx.shadowColor = '#f59e0b';
+                            matrixScreenCtx.shadowBlur = 3;
+                        } else if (charIndex < 3) {
+                            matrixScreenCtx.fillStyle = '#fbbf24';
+                            matrixScreenCtx.shadowBlur = 2;
+                        } else {
+                            matrixScreenCtx.fillStyle = '#f59e0b';
+                            matrixScreenCtx.shadowBlur = 1;
+                        }
+                        matrixScreenCtx.fillText(char, skillCol.x, y);
+                        matrixScreenCtx.shadowBlur = 0;
+                    }
+                });
+            });
+
+            matrixScreenAnimId = requestAnimationFrame(drawMatrixScreen);
+        }
+
+        function startMatrixScreenAnim() {
+            if (matrixScreenAnimId) return;
+            initMatrixScreen();
+            matrixScreen.classList.add('active');
+            drawMatrixScreen();
+        }
+
+        function stopMatrixScreenAnim() {
+            if (matrixScreenAnimId) {
+                cancelAnimationFrame(matrixScreenAnimId);
+                matrixScreenAnimId = null;
+            }
+            matrixScreen.classList.remove('active');
+            // Clear canvas with fade
+            matrixScreenCtx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+            matrixScreenCtx.fillRect(0, 0, skillsMatrixCanvas.width, skillsMatrixCanvas.height);
+        }
+
+        // Hover events for matrix screen
+        matrixScreen.addEventListener('mouseenter', startMatrixScreenAnim);
+        matrixScreen.addEventListener('mouseleave', stopMatrixScreenAnim);
+
+        // ============================================
+        // SKILL DETAIL POPUP
+        // ============================================
+        const detailPopup = document.getElementById('skill-detail');
+        const detailTitle = document.getElementById('detail-title');
+        const detailDesc = document.getElementById('detail-desc');
+        const detailProf = document.getElementById('detail-proficiency');
+
+        document.querySelectorAll('.skill-tag-mini').forEach(tag => {
+            tag.addEventListener('mouseenter', (e) => {
+                // Only show connections if skill is revealed
+                if (!e.target.classList.contains('revealed')) return;
+
+                const connections = e.target.dataset.connections;
+
+                // Draw connections if defined
+                if (connections) {
+                    drawSkillConnections(e.target, connections.split(','));
+                }
+            });
+
+            tag.addEventListener('mouseleave', () => {
+                clearSkillConnections();
+            });
+        });
+
+        // ============================================
+        // SKILL CONNECTION LINES
+        // ============================================
+        const connectionSvg = document.getElementById('connection-svg');
+        const connectionLinesGroup = document.getElementById('connection-lines');
+
+        function drawSkillConnections(skillTag, targetIds) {
+            // Clear existing connections
+            clearSkillConnections();
+
+            // Add connecting class to skill tag
+            skillTag.classList.add('connecting');
+
+            const skillRect = skillTag.getBoundingClientRect();
+            const skillCenterX = skillRect.left + skillRect.width / 2;
+            const skillCenterY = skillRect.top + skillRect.height / 2;
+
+            targetIds.forEach((targetId, index) => {
+                const targetElement = document.getElementById(targetId.trim());
+                if (!targetElement) return;
+
+                // Highlight the target section
+                targetElement.classList.add('highlighted');
+
+                const targetRect = targetElement.getBoundingClientRect();
+                const targetCenterX = targetRect.left + targetRect.width / 2;
+                const targetCenterY = targetRect.top + targetRect.height / 2;
+
+                // Create animated curved path
+                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+
+                // Calculate control points for a nice curve
+                const dx = targetCenterX - skillCenterX;
+                const dy = targetCenterY - skillCenterY;
+                const curveOffset = Math.min(Math.abs(dx), Math.abs(dy)) * 0.5;
+
+                // Create bezier curve path
+                const ctrl1X = skillCenterX - curveOffset;
+                const ctrl1Y = skillCenterY + dy * 0.3;
+                const ctrl2X = targetCenterX - curveOffset;
+                const ctrl2Y = targetCenterY - dy * 0.3;
+
+                const pathD = `M ${skillCenterX} ${skillCenterY} C ${ctrl1X} ${ctrl1Y}, ${ctrl2X} ${ctrl2Y}, ${targetCenterX} ${targetCenterY}`;
+
+                path.setAttribute('d', pathD);
+                path.setAttribute('class', 'connection-path');
+                path.setAttribute('filter', 'url(#glow)');
+
+                // Calculate path length for animation
+                connectionLinesGroup.appendChild(path);
+                const pathLength = path.getTotalLength();
+
+                // Animate the path drawing
+                path.style.strokeDasharray = pathLength;
+                path.style.strokeDashoffset = pathLength;
+                path.style.animation = `drawLine 0.5s ease-out ${index * 0.1}s forwards`;
+
+                // Add glow dots at endpoints
+                const startDot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                startDot.setAttribute('cx', skillCenterX);
+                startDot.setAttribute('cy', skillCenterY);
+                startDot.setAttribute('r', '4');
+                startDot.setAttribute('class', 'connection-dot');
+                startDot.style.opacity = '0';
+                startDot.style.animation = `fadeIn 0.3s ease-out ${index * 0.1}s forwards`;
+                connectionLinesGroup.appendChild(startDot);
+
+                const endDot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                endDot.setAttribute('cx', targetCenterX);
+                endDot.setAttribute('cy', targetCenterY);
+                endDot.setAttribute('r', '6');
+                endDot.setAttribute('class', 'connection-dot');
+                endDot.style.opacity = '0';
+                endDot.style.animation = `fadeIn 0.3s ease-out ${index * 0.1 + 0.3}s forwards`;
+                connectionLinesGroup.appendChild(endDot);
+
+                // Make path visible
+                setTimeout(() => {
+                    path.classList.add('active');
+                }, index * 100);
+            });
+        }
+
+        function clearSkillConnections() {
+            // Remove all connection paths
+            while (connectionLinesGroup.firstChild) {
+                connectionLinesGroup.removeChild(connectionLinesGroup.firstChild);
+            }
+
+            // Remove connecting class from all skill tags
+            document.querySelectorAll('.skill-tag-mini.connecting').forEach(tag => {
+                tag.classList.remove('connecting');
+            });
+
+            // Remove highlighted class from all sections
+            document.querySelectorAll('.experience-section.highlighted').forEach(section => {
+                section.classList.remove('highlighted');
+            });
+        }
+
+        // ============================================
+        // EXPERIENCE → SKILLS HIGHLIGHTING (REVERSE)
+        // Also triggers matrix animation and skill reveals
+        // ============================================
+        document.querySelectorAll('.experience-section[data-skills]').forEach(section => {
+            section.addEventListener('mouseenter', (e) => {
+                const skills = e.currentTarget.dataset.skills;
+                if (skills) {
+                    highlightSkillsFromExperience(e.currentTarget, skills.split(','));
+
+                    // Start matrix animation if not already running
+                    if (!matrixScreenAnimId) {
+                        startMatrixScreenAnim();
+                    }
+
+                    // Reveal these specific skills with stagger
+                    const skillIds = skills.split(',');
+                    skillIds.forEach((skillId, index) => {
+                        setTimeout(() => {
+                            const trimmedId = skillId.trim();
+                            if (!revealedSkills.has(trimmedId)) {
+                                revealedSkills.add(trimmedId);
+                                const skillTag = document.querySelector(`.skill-tag-mini[data-skill="${trimmedId}"]`);
+                                if (skillTag) {
+                                    skillTag.classList.add('revealed');
+                                    // Reveal category
+                                    const category = skillCategories[trimmedId];
+                                    if (category) {
+                                        const categoryLabel = document.querySelector(`.skills-category-label[data-category="${category}"]`);
+                                        if (categoryLabel) categoryLabel.classList.add('revealed');
+                                    }
+                                }
+                            }
+                        }, index * 150);
+                    });
+                }
+            });
+
+            section.addEventListener('mouseleave', () => {
+                clearSkillHighlights();
+            });
+        });
+
+        function highlightSkillsFromExperience(experienceSection, skillIds) {
+            // Add hovering class to experience section
+            experienceSection.classList.add('exp-hovering');
+
+            // Find and highlight matching skill tags (only if revealed)
+            skillIds.forEach((skillId, index) => {
+                const skillTag = document.querySelector(`.skill-tag-mini[data-skill="${skillId.trim()}"]`);
+                if (skillTag && skillTag.classList.contains('revealed')) {
+                    // Stagger the animation slightly
+                    setTimeout(() => {
+                        skillTag.classList.add('skill-highlighted');
+                    }, index * 50);
+                }
+            });
+        }
+
+        function clearSkillHighlights() {
+            // Remove hovering class from all experience sections
+            document.querySelectorAll('.experience-section.exp-hovering').forEach(section => {
+                section.classList.remove('exp-hovering');
+            });
+
+            // Remove highlighted class from all skill tags
+            document.querySelectorAll('.skill-tag-mini.skill-highlighted').forEach(tag => {
+                tag.classList.remove('skill-highlighted');
+            });
+        }
+
+        // ============================================
+        // SKILLS EXPLOSION OVERLAY
+        // ============================================
+        const overlay = document.getElementById('skills-overlay');
+        const skillsSection = document.getElementById('skills-section');
+        const closeBtn = document.getElementById('close-overlay');
+        const particleCanvas = document.getElementById('particle-canvas');
+        const connectionsCanvas = document.getElementById('connections-canvas');
+        const forceGraph = document.getElementById('force-graph');
+
+        let isOverlayActive = false;
+        let particles = [];
+        let animationId;
+
+        // Open overlay on skills section click
+        skillsSection.addEventListener('click', () => {
+            openSkillsOverlay();
+        });
+
+        closeBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            closeSkillsOverlay();
+        });
+
+        // Close on escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && isOverlayActive) {
+                closeSkillsOverlay();
+            }
+        });
+
+        function openSkillsOverlay() {
+            isOverlayActive = true;
+            overlay.classList.add('active');
+
+            // Setup canvases
+            particleCanvas.width = window.innerWidth;
+            particleCanvas.height = window.innerHeight;
+            connectionsCanvas.width = window.innerWidth;
+            connectionsCanvas.height = window.innerHeight;
+
+            // Create force-directed graph
+            createForceGraph();
+
+            // Start particle animation
+            initParticles();
+            animateParticles();
+        }
+
+        function closeSkillsOverlay() {
+            isOverlayActive = false;
+            overlay.classList.remove('active');
+            cancelAnimationFrame(animationId);
+
+            // Clear the force graph
+            d3.select('#force-graph').selectAll('*').remove();
+        }
+
+        // ============================================
+        // FORCE-DIRECTED GRAPH
+        // ============================================
+        function createForceGraph() {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+
+            // Create nodes from skills
+            const nodes = allSkills.map((s, i) => ({
+                id: i,
+                name: s.name,
+                category: s.category,
+                x: width / 2 + (Math.random() - 0.5) * 200,
+                y: height / 2 + (Math.random() - 0.5) * 200
+            }));
+
+            // Create links between skills in same category
+            const links = [];
+            nodes.forEach((node, i) => {
+                nodes.forEach((other, j) => {
+                    if (i < j && node.category === other.category) {
+                        links.push({ source: i, target: j });
+                    }
+                });
+            });
+
+            // Also connect some cross-category skills
+            const crossLinks = [
+                { source: 1, target: 7 },  // Python - PyTorch
+                { source: 0, target: 10 }, // C++ - OpenCV
+                { source: 2, target: 13 }, // Swift - ARKit
+                { source: 4, target: 15 }, // C# - Unity
+            ];
+            links.push(...crossLinks);
+
+            const svg = d3.select('#force-graph')
+                .attr('width', width)
+                .attr('height', height);
+
+            // Create force simulation
+            const simulation = d3.forceSimulation(nodes)
+                .force('link', d3.forceLink(links).id(d => d.id).distance(120))
+                .force('charge', d3.forceManyBody().strength(-300))
+                .force('center', d3.forceCenter(width / 2, height / 2))
+                .force('collision', d3.forceCollide().radius(60));
+
+            // Draw links
+            const link = svg.append('g')
+                .selectAll('line')
+                .data(links)
+                .enter()
+                .append('line')
+                .attr('stroke', 'rgba(34, 197, 94, 0.3)')
+                .attr('stroke-width', 1);
+
+            // Draw nodes
+            const node = svg.append('g')
+                .selectAll('g')
+                .data(nodes)
+                .enter()
+                .append('g')
+                .attr('class', 'skill-node')
+                .call(d3.drag()
+                    .on('start', dragstarted)
+                    .on('drag', dragged)
+                    .on('end', dragended));
+
+            // Node circles
+            node.append('circle')
+                .attr('r', 35)
+                .attr('fill', d => categoryColors[d.category])
+                .attr('fill-opacity', 0.2)
+                .attr('stroke', d => categoryColors[d.category])
+                .attr('stroke-width', 2)
+                .style('cursor', 'grab')
+                .style('filter', 'drop-shadow(0 0 10px rgba(34, 197, 94, 0.5))')
+                .on('mouseover', function() {
+                    d3.select(this)
+                        .transition()
+                        .duration(200)
+                        .attr('r', 45)
+                        .attr('fill-opacity', 0.4);
+                })
+                .on('mouseout', function() {
+                    d3.select(this)
+                        .transition()
+                        .duration(200)
+                        .attr('r', 35)
+                        .attr('fill-opacity', 0.2);
+                });
+
+            // Node labels
+            node.append('text')
+                .text(d => d.name)
+                .attr('text-anchor', 'middle')
+                .attr('dominant-baseline', 'middle')
+                .attr('fill', '#bbf7d0')
+                .attr('font-size', '11px')
+                .attr('font-weight', '500')
+                .style('pointer-events', 'none');
+
+            // Update positions on tick
+            simulation.on('tick', () => {
+                link
+                    .attr('x1', d => d.source.x)
+                    .attr('y1', d => d.source.y)
+                    .attr('x2', d => d.target.x)
+                    .attr('y2', d => d.target.y);
+
+                node.attr('transform', d => `translate(${d.x}, ${d.y})`);
+            });
+
+            function dragstarted(event, d) {
+                if (!event.active) simulation.alphaTarget(0.3).restart();
+                d.fx = d.x;
+                d.fy = d.y;
+            }
+
+            function dragged(event, d) {
+                d.fx = event.x;
+                d.fy = event.y;
+            }
+
+            function dragended(event, d) {
+                if (!event.active) simulation.alphaTarget(0);
+                d.fx = null;
+                d.fy = null;
+            }
+
+            // Add category labels
+            const categories = [
+                { name: 'LANGUAGES', x: 100, y: 80, color: categoryColors.languages },
+                { name: 'ML & SCIENTIFIC', x: width - 150, y: 80, color: categoryColors.ml },
+                { name: 'XR PLATFORMS', x: width / 2, y: height - 60, color: categoryColors.xr },
+            ];
+
+            svg.selectAll('.category-label')
+                .data(categories)
+                .enter()
+                .append('text')
+                .attr('class', 'category-label')
+                .attr('x', d => d.x)
+                .attr('y', d => d.y)
+                .attr('text-anchor', 'middle')
+                .attr('fill', d => d.color)
+                .attr('font-size', '12px')
+                .attr('font-weight', '700')
+                .attr('letter-spacing', '0.2em')
+                .text(d => d.name)
+                .style('text-shadow', d => `0 0 20px ${d.color}`);
+        }
+
+        // ============================================
+        // PARTICLE SYSTEM
+        // ============================================
+        function initParticles() {
+            particles = [];
+            for (let i = 0; i < 100; i++) {
+                particles.push({
+                    x: Math.random() * window.innerWidth,
+                    y: Math.random() * window.innerHeight,
+                    vx: (Math.random() - 0.5) * 0.5,
+                    vy: (Math.random() - 0.5) * 0.5,
+                    size: Math.random() * 3 + 1,
+                    opacity: Math.random() * 0.5 + 0.2
+                });
+            }
+        }
+
+        function animateParticles() {
+            if (!isOverlayActive) return;
+
+            const ctx = particleCanvas.getContext('2d');
+            ctx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
+
+            particles.forEach(p => {
+                p.x += p.vx;
+                p.y += p.vy;
+
+                // Wrap around
+                if (p.x < 0) p.x = particleCanvas.width;
+                if (p.x > particleCanvas.width) p.x = 0;
+                if (p.y < 0) p.y = particleCanvas.height;
+                if (p.y > particleCanvas.height) p.y = 0;
+
+                // Draw particle
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(34, 197, 94, ${p.opacity})`;
+                ctx.fill();
+            });
+
+            // Draw connections between nearby particles
+            const connCtx = connectionsCanvas.getContext('2d');
+            connCtx.clearRect(0, 0, connectionsCanvas.width, connectionsCanvas.height);
+
+            particles.forEach((p, i) => {
+                particles.slice(i + 1).forEach(other => {
+                    const dx = p.x - other.x;
+                    const dy = p.y - other.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < 100) {
+                        connCtx.beginPath();
+                        connCtx.moveTo(p.x, p.y);
+                        connCtx.lineTo(other.x, other.y);
+                        connCtx.strokeStyle = `rgba(34, 197, 94, ${0.2 * (1 - dist / 100)})`;
+                        connCtx.stroke();
+                    }
+                });
+            });
+
+            animationId = requestAnimationFrame(animateParticles);
+        }
+
+        // ============================================
+        // EASTER EGG - CLICK NAME 3 TIMES
+        // ============================================
+        let clickCount = 0;
+        let clickTimer = null;
+        const easterEggOverlay = document.getElementById('easter-egg-overlay');
+        const easterEggClose = document.getElementById('easter-egg-close');
+        const clickableName = document.getElementById('clickable-name');
+        const matrixCanvas = document.getElementById('matrix-rain');
+        let matrixAnimationId;
+
+        clickableName.addEventListener('click', () => {
+            clickCount++;
+
+            if (clickTimer) clearTimeout(clickTimer);
+
+            if (clickCount >= 3) {
+                openEasterEgg();
+                clickCount = 0;
+            } else {
+                clickTimer = setTimeout(() => {
+                    clickCount = 0;
+                }, 1000);
+            }
+        });
+
+        easterEggClose.addEventListener('click', closeEasterEgg);
+        easterEggOverlay.addEventListener('click', (e) => {
+            if (e.target === easterEggOverlay) closeEasterEgg();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && easterEggOverlay.classList.contains('active')) {
+                closeEasterEgg();
+            }
+        });
+
+        function openEasterEgg() {
+            easterEggOverlay.classList.add('active');
+            startMatrixRain();
+        }
+
+        function closeEasterEgg() {
+            easterEggOverlay.classList.remove('active');
+            cancelAnimationFrame(matrixAnimationId);
+        }
+
+        // Matrix rain effect
+        function startMatrixRain() {
+            matrixCanvas.width = window.innerWidth;
+            matrixCanvas.height = window.innerHeight;
+            const ctx = matrixCanvas.getContext('2d');
+
+            const chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const fontSize = 14;
+            const columns = matrixCanvas.width / fontSize;
+            const drops = Array(Math.floor(columns)).fill(1);
+
+            function drawMatrix() {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                ctx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+
+                ctx.fillStyle = '#22c55e';
+                ctx.font = `${fontSize}px monospace`;
+
+                for (let i = 0; i < drops.length; i++) {
+                    const char = chars[Math.floor(Math.random() * chars.length)];
+                    ctx.fillText(char, i * fontSize, drops[i] * fontSize);
+
+                    if (drops[i] * fontSize > matrixCanvas.height && Math.random() > 0.975) {
+                        drops[i] = 0;
+                    }
+                    drops[i]++;
+                }
+
+                matrixAnimationId = requestAnimationFrame(drawMatrix);
+            }
+
+            drawMatrix();
+        }
+    </script>
+</body>
+</html>
